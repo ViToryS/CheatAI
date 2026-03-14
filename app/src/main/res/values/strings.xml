@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CheatAI</string>
+    <string name="button_add">Добавить</string>
+    <string name="book_description">Описание</string>
+    <string name="book_read">Читать</string>
+    <string name="loaded_books">Загруженные книги</string>
+</resources>
