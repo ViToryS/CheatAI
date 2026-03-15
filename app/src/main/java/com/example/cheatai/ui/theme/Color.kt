@@ -21,3 +21,8 @@ val LightPink = Color(0xFFDABCFF)
 val LightBlue = Color(0xFF84BEFD)
 val DarkBlue = Color(0xFF1272C4)
 val LightGrey = Color(0xFFCACACA)
+
+val DarkGray = Color(0xFF404040)
+val TintGray = Color(0xFF9E9E9E)
+
+val GrayText = Color(0xFF5B5B5B)

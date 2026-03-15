@@ -30,15 +30,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.cheatai.R
 import com.example.cheatai.data.Book
 import com.example.cheatai.data.StaticBooksRepository
-import com.example.cheatai.ui.theme.Blue
 import com.example.cheatai.ui.theme.Gradients
 import androidx.compose.foundation.lazy.items
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.cheatai.components.BookItem
 import com.example.cheatai.ui.theme.CheatAITypography
 import com.example.cheatai.ui.theme.White
 
@@ -75,7 +74,7 @@ fun MainScreen(
                 style = CheatAITypography.headlineMedium,
                 color = White,
                 modifier = Modifier
-                    .padding(top = 36.dp)
+                    .padding(top = 40.dp)
                     .fillMaxWidth()
                     .wrapContentWidth()
             )
@@ -102,7 +101,7 @@ fun MainScreen(
                     BookItem(
                         book = book,
                         onDescriptionClick = { bookId ->
-                            println("Описание книги $bookId")
+                            navController.navigate("book_description/$bookId")
                         },
                         onReadClick = { bookId ->
                             println("Читаем книгу $bookId")

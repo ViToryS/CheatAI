@@ -25,4 +25,11 @@ object Gradients {
         start = Offset(0f, 0f),
         end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
     )
+
+    val addBookCoverGradient = Brush.verticalGradient(
+        colors = listOf(
+            LightPink.copy(alpha = 0.5f),
+            Blue.copy(alpha = 0.5f)
+        )
+    )
 }

@@ -4,4 +4,9 @@
     <string name="book_description">Описание</string>
     <string name="book_read">Читать</string>
     <string name="loaded_books">Загруженные книги</string>
+    <string name="add_new_book">Новая книга</string>
+    <string name="save_book">Сохранить</string>
+    <string name="upload_cover">Загрузи обложку\n</string>
+    <string name="content">Содержание</string>
+    <string name="bookmarkings">Закладки</string>
 </resources>
