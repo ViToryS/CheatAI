@@ -25,8 +25,8 @@
 $env:ANDROID_HOME = "D:\Android"
 
 Открой командную строку (Win+R → cmd) и выполни:
-```bash
-D:\Android\cmdline-tools\bin\sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"/```
+bash
+D:\Android\cmdline-tools\bin\sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
 ## 4. Клонируйте проект
 git clone https://github.com/ViToryS/CheatAI.git
