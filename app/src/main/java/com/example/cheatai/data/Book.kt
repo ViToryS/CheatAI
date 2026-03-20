@@ -1,8 +1,5 @@
 package com.example.cheatai.data
 
-import androidx.compose.runtime.Immutable
-
-@Immutable
 data class Book(
     val id: String,
     val title: String,
@@ -10,5 +7,19 @@ data class Book(
     val description: String,
     val coverUrl: String,
     val pages: Int,
-    val progress: Int? = null
+
+    val sourceType: SourceType = SourceType.STATIC,
+    val filePath: String? = null,
+    val chapters: List<BookChapter> = emptyList()
+)
+
+enum class SourceType {
+    STATIC,
+}
+
+data class BookChapter(
+    val id: String,
+    val title: String,
+    val content: String,
+    val order: Int
 )

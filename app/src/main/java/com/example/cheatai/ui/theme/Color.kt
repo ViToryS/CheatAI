@@ -26,3 +26,8 @@ val DarkGray = Color(0xFF404040)
 val TintGray = Color(0xFF9E9E9E)
 
 val GrayText = Color(0xFF5B5B5B)
+val PinkRead = Color(0xFFFFDAFA)
+
+
+val DarkPinkSelection = Color(0xFFB300FF).copy(alpha = 0.3f)
+val PinkSelection = Color(0xFFDD00C0).copy(alpha = 0.45f)

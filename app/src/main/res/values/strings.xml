@@ -9,4 +9,19 @@
     <string name="upload_cover">Загрузи обложку\n</string>
     <string name="content">Содержание</string>
     <string name="bookmarkings">Закладки</string>
+    <string name="book_name">Название книги</string>
+    <string name="athor">Автор</string>
+    <string name="back">Назад\n</string>
+    <string name="map_search">Поиск по карте\n</string>
+    <string name="def_search">Поиск понятия</string>
+    <string name="find_by_map">Поиск по карте</string>
+    <string name="map">Карта\n</string>
+    <string name="remove">Удалить\n</string>
+    <string name="edit">Редактировать</string>
+    <string name="go_to">\nПерейти\n</string>
+    <string name="title">Заголовок\n</string>
+    <string name="new_book">Новая\n</string>
+    <string name="cancel">Отмена\n</string>
+    <string name="no_chapters">Нет доступных глав\n</string>
+    <string name="no_book_found">Книга не найдена</string>
 </resources>

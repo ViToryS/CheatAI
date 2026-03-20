@@ -1,0 +1,132 @@
+{
+  "bookTitle": "Гарри Поттер и философский камень",
+  "author": "Джоан Роулинг",
+  "chapters": [
+    {
+      "id": 1,
+      "title": "Глава 1. Мальчик, который выжил",
+      "file": "chapter1.html",
+      "level": 1,
+      "subchapters": []
+    },
+    {
+      "id": 2,
+      "title": "Глава 2. Исчезнувшее стекло",
+      "file": "chapter2.html",
+      "level": 1,
+      "subchapters": []
+    },
+    {
+      "id": 3,
+      "title": "Глава 3. Письма от никого",
+      "file": "chapter3.html",
+      "level": 1,
+      "subchapters": [
+        {
+          "id": 31,
+          "title": "Часть 3.1. Первое письмо",
+          "file": "chapter3_part1.html",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Глава 4. Хранитель ключей",
+      "file": "chapter4.html",
+      "level": 1,
+      "subchapters": []
+    },
+    {
+      "id": 5,
+      "title": "Глава 5. Косая аллея",
+      "file": "chapter5.html",
+      "level": 1,
+      "subchapters": []
+    },
+    {
+      "id": 6,
+      "title": "Глава 6. Путешествие с платформы девять и три четверти",
+      "file": "chapter6.html",
+      "level": 1,
+      "subchapters": []
+    },
+    {
+      "id": 7,
+      "title": "Глава 7. Распределяющая шляпа",
+      "file": "chapter7.html",
+      "level": 1,
+      "subchapters": []
+    },
+    {
+      "id": 8,
+      "title": "Глава 8. Профессор Снейп",
+      "file": "chapter8.html",
+      "level": 1,
+      "subchapters": []
+    },
+    {
+      "id": 9,
+      "title": "Глава 9. Поединок в полночь",
+      "file": "chapter9.html",
+      "level": 1,
+      "subchapters": []
+    },
+    {
+      "id": 10,
+      "title": "Глава 10. Хэллоуин",
+      "file": "chapter10.html",
+      "level": 1,
+      "subchapters": []
+    },
+    {
+      "id": 11,
+      "title": "Глава 11. Квиддич",
+      "file": "chapter11.html",
+      "level": 1,
+      "subchapters": []
+    },
+    {
+      "id": 12,
+      "title": "Глава 12. Зеркало Еиналеж",
+      "file": "chapter12.html",
+      "level": 1,
+      "subchapters": []
+    },
+    {
+      "id": 13,
+      "title": "Глава 13. Николас Фламель",
+      "file": "chapter13.html",
+      "level": 1,
+      "subchapters": []
+    },
+    {
+      "id": 14,
+      "title": "Глава 14. Норберт",
+      "file": "chapter14.html",
+      "level": 1,
+      "subchapters": []
+    },
+    {
+      "id": 15,
+      "title": "Глава 15. Запретный лес",
+      "file": "chapter15.html",
+      "level": 1,
+      "subchapters": []
+    },
+    {
+      "id": 16,
+      "title": "Глава 16. Люк в полу",
+      "file": "chapter16.html",
+      "level": 1,
+      "subchapters": []
+    },
+    {
+      "id": 17,
+      "title": "Глава 17. Человек с двумя лицами",
+      "file": "chapter17.html",
+      "level": 1,
+      "subchapters": []
+    }
+  ]
+}

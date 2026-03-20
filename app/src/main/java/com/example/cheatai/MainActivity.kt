@@ -1,21 +1,29 @@
 package com.example.cheatai
 
+
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.example.cheatai.screens.MainScreen
+import androidx.compose.runtime.CompositionLocalProvider
+import com.example.cheatai.navigation.AppNavigation
 import com.example.cheatai.ui.theme.CheatAITheme
+import com.example.cheatai.ui.theme.LocalAppDimensions
+import com.example.cheatai.ui.theme.provideAppDimensions
+import com.example.cheatai.ui.theme.rememberWindowSizeClass
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
-
         super.onCreate(savedInstanceState)
-
         setContent {
             CheatAITheme {
-                MainScreen()
+                val sizeClass = rememberWindowSizeClass()
+                val dimensions = provideAppDimensions(sizeClass)
+                CompositionLocalProvider(
+                    LocalAppDimensions provides dimensions
+                ) {
+                    AppNavigation()
+                }
             }
         }
     }

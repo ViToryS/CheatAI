@@ -5,7 +5,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
+
 import com.example.cheatai.R
 
 
@@ -30,16 +30,16 @@ val firaSansCondensedFontFamily = FontFamily(
 val CheatAITypography = Typography(
     labelMedium = TextStyle(
         fontFamily =  EnoFamilyFont,
-        fontSize = 20.sp
 ),
     titleMedium = TextStyle(
         fontFamily = EnoFamilyFont,
         fontWeight = FontWeight.Bold,
-        fontSize = 20.sp
+    ),
+    labelSmall= TextStyle(
+        fontFamily = EnoFamilyFont,
     ),
     headlineMedium = TextStyle(
         fontFamily = firaSansCondensedFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 20.sp
     )
 )

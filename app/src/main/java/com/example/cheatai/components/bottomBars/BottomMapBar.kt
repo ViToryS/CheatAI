@@ -1,0 +1,79 @@
+package com.example.cheatai.components.bottomBars
+
+
+import androidx.compose.foundation.Image
+import androidx.compose.runtime.Composable
+import com.example.cheatai.ui.theme.LocalAppDimensions
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
+
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.example.cheatai.R
+import com.example.cheatai.ui.theme.CheatAITypography
+import com.example.cheatai.ui.theme.Gradients
+import com.example.cheatai.ui.theme.White
+
+@Composable
+fun BottomMapBar(
+    selectedPlace: String = "Лондон"
+) {
+    val dimensions = LocalAppDimensions.current
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(screenHeight / 2)
+    ) {
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(dimensions.bottomBarHeight)
+                .clip(RoundedCornerShape(
+                    topStart = dimensions.cornerMedium,
+                    topEnd = dimensions.cornerMedium
+                ))
+                .background(brush = Gradients.bottomUpPanelGradient),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Text(
+                text = "${stringResource(R.string.find_by_map)}: $selectedPlace",
+                style = CheatAITypography.labelMedium,
+                fontSize = dimensions.textMedium,
+                color = White,
+                modifier = Modifier.padding(start = dimensions.paddingMedium)
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .background(Color.White)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.map_placeholder),
+                contentDescription = stringResource(R.string.map),
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        }
+    }
+}
