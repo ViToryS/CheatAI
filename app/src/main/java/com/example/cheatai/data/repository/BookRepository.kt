@@ -22,13 +22,6 @@ class BookRepository @Inject constructor(
         return database.bookDao().getBookByIdFlow(bookId)
     }
 
-    suspend fun updateProgress(bookId: Long, page: Int) {
-        database.bookDao().updateProgress(bookId, page)
-    }
-
-    suspend fun deleteBook(book: BookEntity) {
-        database.bookDao().deleteBook(book)
-    }
     suspend fun updateLocator(bookId: Long, locator: String) {
         database.bookDao().updateLocator(bookId, locator)
     }

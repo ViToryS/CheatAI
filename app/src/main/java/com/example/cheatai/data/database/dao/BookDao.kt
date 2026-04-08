@@ -1,7 +1,6 @@
 package com.example.cheatai.data.database.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -19,21 +18,6 @@ interface BookDao {
 
     @Query("SELECT * FROM books ORDER BY id DESC")
     fun getAllBooks(): Flow<List<BookEntity>>
-
-    @Query("SELECT * FROM books WHERE id = :bookId")
-    suspend fun getBookById(bookId: Long): BookEntity?
-
-    @Query("UPDATE books SET currentPage = :page WHERE id = :bookId")
-    suspend fun updateProgress(bookId: Long, page: Int)
-
-    @Delete
-    suspend fun deleteBook(book: BookEntity)
-
-    @Query("DELETE FROM books WHERE id = :bookId")
-    suspend fun deleteBookById(bookId: Long)
-
-    @Query("SELECT COUNT(*) FROM books")
-    suspend fun getBookCount(): Int
 
     @Query("SELECT * FROM books WHERE id = :bookId")
     fun getBookByIdFlow(bookId: Long): Flow<BookEntity?>
