@@ -2,15 +2,17 @@ package com.example.cheatai.navigation
 
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.cheatai.screens.AddBookScreen
-import com.example.cheatai.screens.BookDescriptionScreen
-import com.example.cheatai.screens.ChaptersScreen
-import com.example.cheatai.screens.MainScreen
-import com.example.cheatai.screens.NotesScreen
-import com.example.cheatai.screens.ReaderScreen
+import androidx.navigation.navArgument
+import com.example.cheatai.screens.addBook.AddBookScreen
+import com.example.cheatai.screens.description.BookDescriptionScreen
+import com.example.cheatai.screens.chapters.ChaptersScreen
+import com.example.cheatai.screens.books.BooksScreen
+import com.example.cheatai.screens.notes.NotesScreen
+import com.example.cheatai.screens.reader.ReaderScreen
 
 
 @Composable
@@ -22,7 +24,7 @@ fun AppNavigation() {
         startDestination = "main"
     ) {
         composable("main") {
-            MainScreen(navController)
+            BooksScreen(navController)
         }
 
         composable("add_screen") {
@@ -34,31 +36,54 @@ fun AppNavigation() {
             BookDescriptionScreen(bookId, navController)
         }
 
-        composable("book_notes/{bookId}/{source}") { backStackEntry ->
-            val bookId = backStackEntry.arguments?.getString("bookId") ?: return@composable
+        composable(
+            route = "book_notes/{bookId}/{source}?locator={locator}",
+            arguments = listOf(
+                navArgument("bookId") { type = NavType.StringType },
+                navArgument("source") { type = NavType.StringType },
+                navArgument("locator") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                    nullable = true
+                }
+            )
+        ) { backStackEntry ->
+            val bookId = backStackEntry.arguments?.getString("bookId") ?: ""
             val source = backStackEntry.arguments?.getString("source") ?: "description"
+            val locatorJson = backStackEntry.arguments?.getString("locator") ?: ""
             NotesScreen(
                 navController = navController,
                 bookId = bookId,
-                source = source
+                source = source,
+                initialLocatorJson = locatorJson
             )
         }
 
-        composable("reader/{bookId}/{source}") { backStackEntry ->
+
+        composable("chapters/{bookId}") { backStackEntry ->
             val bookId = backStackEntry.arguments?.getString("bookId") ?: ""
-            val source = backStackEntry.arguments?.getString("source") ?: "description"
+            ChaptersScreen(
+                navController = navController,
+                bookId = bookId
+            )
+        }
+        composable(
+            route = "reader/{bookId}?locator={locator}",
+            arguments = listOf(
+                navArgument("bookId") { type = NavType.StringType },
+                navArgument("locator") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                    nullable = true
+                }
+            )
+        ) { backStackEntry ->
+            val bookId = backStackEntry.arguments?.getString("bookId") ?: "1"
+            val locatorJson = backStackEntry.arguments?.getString("locator") ?: ""
             ReaderScreen(
                 navController = navController,
                 bookId = bookId,
-                source = source
-            )
-        }
-        composable("chapters") {
-            ChaptersScreen(
-                navController = navController,
-                onChapterClick = { chapter ->
-                    navController.navigate("reader/1/0")
-                }
+                initialLocatorJson = locatorJson
             )
         }
     }
