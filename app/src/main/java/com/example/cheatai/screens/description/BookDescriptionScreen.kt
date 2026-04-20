@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -23,7 +24,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,13 +49,12 @@ import com.example.cheatai.ui.theme.LightPink
 import com.example.cheatai.ui.theme.LocalAppDimensions
 import com.example.cheatai.ui.theme.White
 
-
 @Composable
 fun BookDescriptionScreen(
     bookId: String,
     navController: NavController? = null
 ) {
-
+    var showDeleteDialog by remember { mutableStateOf(false) }
     val dimensions = LocalAppDimensions.current
 
     val viewModel = remember {
@@ -76,7 +78,7 @@ fun BookDescriptionScreen(
 
     val source = "description"
     val painter = painterResource(id = parseDrawableRes(
-        book!!.coverUrl
+        book.coverUrl
     )
     )
     val intrinsicSize = painter.intrinsicSize
@@ -115,7 +117,7 @@ fun BookDescriptionScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 BookCoverImage(
-                    coverUrl = book!!.coverUrl,
+                    coverUrl = book.coverUrl,
                     modifier = Modifier
                         .height(availableHeight)
                         .aspectRatio(imageAspectRatio)
@@ -124,7 +126,7 @@ fun BookDescriptionScreen(
                 Spacer(modifier = Modifier.height(dimensions.paddingMedium))
 
                 Text(
-                    text = "${stringResource(id = R.string.athor)}: ${book!!.author}",
+                    text = "${stringResource(id = R.string.athor)}: ${book.author}",
                     style = CheatAITypography.labelMedium,
                     color = White,
                     fontSize = dimensions.textMedium,
@@ -134,7 +136,7 @@ fun BookDescriptionScreen(
                 Spacer(modifier = Modifier.height(dimensions.paddingExtraSmall))
 
                 Text(
-                    text = book!!.title,
+                    text = book.title,
                     style = CheatAITypography.labelMedium,
                     fontSize = dimensions.textMedium,
                     color = White,
@@ -155,6 +157,21 @@ fun BookDescriptionScreen(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_back),
                     contentDescription = stringResource(id = R.string.back),
+                    tint = White,
+                    modifier = Modifier.size(dimensions.iconSize)
+                )
+            }
+            IconButton(
+                onClick = { showDeleteDialog = true },
+                modifier = Modifier
+                    .padding(end = dimensions.paddingMedium, top = dimensions.paddingLarge)
+                    .align(Alignment.TopEnd)
+                    .size(dimensions.iconButtonSize)
+
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_delete),
+                    contentDescription = "Удалить книгу",
                     tint = White,
                     modifier = Modifier.size(dimensions.iconSize)
                 )
@@ -209,7 +226,7 @@ fun BookDescriptionScreen(
             contentAlignment = Alignment.TopCenter
         ) {
             Text(
-                text = book!!.description.ifBlank { "Без описания" },
+                text = book.description.ifBlank { "Без описания" },
                 style = CheatAITypography.labelMedium,
                 fontSize = dimensions.textMedium,
                 color = GrayText,
@@ -229,5 +246,32 @@ fun BookDescriptionScreen(
                 source
             )
         }
+    }
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Удалить книгу?") },
+            text = { Text("Вы уверены, что хотите удалить книгу \"${book.title}\"? Это действие нельзя отменить.") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        viewModel.deleteBook(bookId.toLong()) {
+                            navController?.popBackStack()
+                        }
+                        showDeleteDialog = false
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                ) {
+                    Text("Удалить", color = Color.White)
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = { showDeleteDialog = false }
+                ) {
+                    Text("Отмена")
+                }
+            }
+        )
     }
 }

@@ -193,7 +193,7 @@ fun BookCoverImage(
             }
         }
         coverUrl.startsWith("content://") -> {
-            // URI обложки
+
             AsyncImage(
                 model = coverUrl,
                 contentDescription = null,

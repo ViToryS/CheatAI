@@ -25,4 +25,8 @@ class BookRepository @Inject constructor(
     suspend fun updateLocator(bookId: Long, locator: String) {
         database.bookDao().updateLocator(bookId, locator)
     }
+
+    suspend fun deleteBookById(bookId: Long) {
+        database.bookDao().deleteBookById(bookId)
+    }
 }

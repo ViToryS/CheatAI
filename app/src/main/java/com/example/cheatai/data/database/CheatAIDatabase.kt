@@ -11,7 +11,7 @@ import com.example.cheatai.data.database.entities.NoteEntity
 
 @Database(
     entities = [BookEntity::class, NoteEntity::class],
-    version = 8
+    version = 9
 )
 abstract class CheatAIDatabase : RoomDatabase() {
 

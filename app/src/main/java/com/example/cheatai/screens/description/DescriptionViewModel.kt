@@ -28,4 +28,10 @@ class DescriptionViewModel(
             _isLoading.value = false
         }
     }
+    fun deleteBook(bookId: Long, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            repository.deleteBookById(bookId)
+            onSuccess()
+        }
+    }
 }

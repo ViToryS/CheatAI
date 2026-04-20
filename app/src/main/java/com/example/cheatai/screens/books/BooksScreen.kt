@@ -3,7 +3,9 @@ package com.example.cheatai.screens.books
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,6 +41,7 @@ import com.example.cheatai.R
 import com.example.cheatai.screens.components.cards.BookItem
 import com.example.cheatai.ui.theme.CheatAITypography
 import com.example.cheatai.ui.theme.Gradients
+import com.example.cheatai.ui.theme.GrayText
 import com.example.cheatai.ui.theme.LocalAppDimensions
 import com.example.cheatai.ui.theme.White
 
@@ -96,26 +99,58 @@ fun BooksScreen(
                         dimensions.bottomButtonSize / 2 + dimensions.bottomButtonOffset)
                 .padding(horizontal = dimensions.paddingMedium)
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(dimensions.cornerMedium))
-                    .background(
-                        color = White,
-                        shape = RoundedCornerShape(dimensions.cornerMedium)
-                    ),
-                verticalArrangement = Arrangement.spacedBy(dimensions.scrollAreaPadding)
-            ) {
-                items(books) { book ->
-                    BookItem(
-                        book = book,
-                        onDescriptionClick = { bookId ->
-                            navController.navigate("book_description/$bookId")
-                        },
-                        onReadClick = { bookId ->
-                            navController.navigate("reader/$bookId")
+            when {
+                isLoading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+                books.isEmpty() -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = "У вас пока нет книг",
+                                style = CheatAITypography.labelMedium,
+                                color = GrayText
+                            )
+                            Spacer(modifier = Modifier.height(dimensions.scrollAreaPadding))
+                            Text(
+                                text = "Нажмите + чтобы добавить книгу",
+                                style = CheatAITypography.labelSmall,
+                                color = GrayText
+                            )
                         }
-                    )
+                    }
+                }
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(dimensions.cornerMedium))
+                            .background(
+                                color = White,
+                                shape = RoundedCornerShape(dimensions.cornerMedium)
+                            ),
+                        verticalArrangement = Arrangement.spacedBy(dimensions.scrollAreaPadding)
+                    ) {
+                        items(books) { book ->
+                            BookItem(
+                                book = book,
+                                onDescriptionClick = { bookId ->
+                                    navController.navigate("book_description/$bookId")
+                                },
+                                onReadClick = { bookId ->
+                                    navController.navigate("reader/$bookId")
+                                }
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -159,14 +194,5 @@ fun BooksScreen(
                 modifier = Modifier.size(dimensions.bottomButtonSize * 0.55f)
             )
         }
-        if (isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.3f)),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }}
     }
 }

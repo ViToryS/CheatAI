@@ -1,13 +1,23 @@
 package com.example.cheatai.data.database.entities
-
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.example.cheatai.data.model.Note
 import com.example.cheatai.data.model.NoteLocation
 import org.json.JSONObject
 import org.readium.r2.shared.publication.Locator
 
-@Entity(tableName = "notes")
+@Entity(
+    tableName = "notes",
+    foreignKeys = [
+        ForeignKey(
+            entity = BookEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["bookId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class NoteEntity(
     @PrimaryKey
     val id: String,
