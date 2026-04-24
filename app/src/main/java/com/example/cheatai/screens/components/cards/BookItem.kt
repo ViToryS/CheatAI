@@ -169,7 +169,7 @@ fun BookCoverImage(
 ) {
     when {
         coverUrl.startsWith("drawable://") -> {
-            // Старый формат: drawable ресурс
+
             val resId = parseDrawableRes(coverUrl)
             androidx.compose.foundation.Image(
                 painter = painterResource(id = resId),
@@ -179,7 +179,6 @@ fun BookCoverImage(
             )
         }
         coverUrl.startsWith("/data/") || coverUrl.startsWith("file:") -> {
-            // Путь к файлу
             val file = File(coverUrl)
             if (file.exists()) {
                 AsyncImage(

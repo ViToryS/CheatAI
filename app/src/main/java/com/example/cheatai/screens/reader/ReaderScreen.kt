@@ -4,10 +4,17 @@ import android.content.res.Configuration
 import android.graphics.PointF
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,12 +23,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentContainerView
@@ -35,7 +46,11 @@ import com.example.cheatai.screens.components.topBars.TopBarRead
 import com.example.cheatai.ui.theme.GrayText
 import com.example.cheatai.ui.theme.LocalAppDimensions
 import com.example.cheatai.ui.theme.PinkRead
+import com.example.cheatai.ui.theme.White
+import com.example.cheatai.utils.PlaceHighlighter
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.readium.r2.navigator.SelectableNavigator
 import org.readium.r2.navigator.epub.EpubDefaults
 import org.readium.r2.navigator.epub.EpubNavigatorFactory
 import org.readium.r2.navigator.epub.EpubNavigatorFragment
@@ -52,6 +67,7 @@ fun ReaderScreen(
     bookId: String,
     initialLocatorJson: String = ""
 ) {
+    val scope = rememberCoroutineScope()
     val dimensions = LocalAppDimensions.current
     val context = LocalContext.current
     val contentResolver = LocalContext.current.contentResolver
@@ -63,7 +79,9 @@ fun ReaderScreen(
             context
         )
     }
-
+    var lastSelectedText by remember { mutableStateOf("") }
+    val isSearching by viewModel.isSearching.collectAsState()
+    val searchMessage by viewModel.searchMessage.collectAsState()
     val publication by viewModel.publication.collectAsState()
     val bookEntity by viewModel.bookEntity.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
@@ -75,16 +93,19 @@ fun ReaderScreen(
     val currentLocator by viewModel.currentLocator.collectAsState()
     val selectedWord by viewModel.selectedWord.collectAsState()
     val selectedPlace by viewModel.selectedPlace.collectAsState()
-
+    var selectedText by remember { mutableStateOf("") }
     var lastTapTime by remember { mutableStateOf(0L) }
     var fragment by remember { mutableStateOf<EpubNavigatorFragment?>(null) }
-
+    val definition by viewModel.definition.collectAsState()
+    val isLoadingDefinition by viewModel.isLoadingDefinition.collectAsState()
     val activity = context as FragmentActivity
 
     LaunchedEffect(bookId) {
         viewModel.loadBook(bookId.toLong())
     }
-
+    fun countWords(text: String): Int {
+        return text.trim().split(Regex("\\s+")).size
+    }
 
     val locatorListener = object : EpubNavigatorFragment.Listener {
         private var lastTapTime = 0L
@@ -122,13 +143,82 @@ fun ReaderScreen(
             }
 
             publication != null && bookEntity != null -> {
+                PlaceHighlighter.setOnWordSelectedListener { selectedWord ->
+                    viewModel.updateSelectedPlace(selectedWord)
+                }
+                var chapterText by remember { mutableStateOf("") }
+                LaunchedEffect(currentLocator) {
+                    if (currentLocator != null) {
+                        chapterText = viewModel.getCurrentChapterText(currentLocator)
+                    }
+                }
+
+                LaunchedEffect(Unit) {
+                    viewModel.extractedPlaces.collect { places ->
+                        if (places.isNotEmpty() && fragment != null && currentLocator != null) {
+                            val chapterText = viewModel.getCurrentChapterText(currentLocator)
+                            val decorations = PlaceHighlighter.createDecorations(
+                                places = places,
+                                chapterText = chapterText,
+                                currentLocator = currentLocator!!
+                            )
+                            if (decorations.isNotEmpty()) {
+                                scope.launch {
+                                    PlaceHighlighter.applyDecorations(fragment!!, decorations)
+                                }
+                            }
+                        }
+                    }
+                }
+                LaunchedEffect(mapSelectionMode) {
+                    if (mapSelectionMode && chapterText.isNotEmpty()) {
+                        viewModel.extractPlacesFromText(chapterText)
+
+                    }
+                }
+
+                LaunchedEffect(mapSelectionMode) {
+                    if (!mapSelectionMode && fragment != null) {
+                        scope.launch {
+                            PlaceHighlighter.clearDecorations(fragment!!)
+                            viewModel.clearExtractedPlaces()
+                        }
+                    }
+                }
+
+                LaunchedEffect(defSelectionMode, fragment) {
+                    if (defSelectionMode && fragment != null) {
+                        while (true) {
+                            delay(300)
+                            if (!defSelectionMode) break
+
+                            val selection = (fragment as? SelectableNavigator)?.currentSelection()
+                            val selectedText = selection?.locator?.text?.highlight ?: ""
+
+                            if (selectedText.isNotBlank() && selectedText != lastSelectedText) {
+                                lastSelectedText = selectedText
+                                val wordCount = countWords(selectedText)
+
+                                if (wordCount > 1) {
+                                    (fragment as? SelectableNavigator)?.clearSelection()
+                                    Toast.makeText(context, "Можно выделить не более 1 слова",
+                                        Toast.LENGTH_SHORT).show()
+                                    lastSelectedText = ""
+                                }else {
+                                    viewModel.updateSelectedWord(selectedText)
+                                }
+                            }
+                        }
+                    } else if (!defSelectionMode && fragment != null && fragment!!.isAdded) {
+                        (fragment as? SelectableNavigator)?.clearSelection()
+                    }
+                }
+
+
                 val finalInitialLocator = viewModel.getInitialLocator(
                     initialLocatorJson,
                     bookEntity?.lastLocator
                 )
-
-
-
 
                 val defaults = EpubDefaults(
                     scroll = false,
@@ -182,7 +272,8 @@ fun ReaderScreen(
                                 onToggleMapSelection = {
                                     viewModel.toggleMapSelection()
                                 },
-                                onToggleDefSelection = { viewModel.toggleDefSelection()
+                                onToggleDefSelection = {
+                                    viewModel.toggleDefSelection()
                                 }
                             )
                         }
@@ -190,7 +281,15 @@ fun ReaderScreen(
                     bottomBar = {
 
                         when {
-                            defSelectionMode -> BottomDefBar(selectedWord = selectedWord)
+                            defSelectionMode -> BottomDefBar(
+                                selectedWord = selectedWord,
+                                definition = definition,
+                                isLoading = isLoadingDefinition,
+                                onConfirmClick = { word ->
+                                    viewModel.updateSelectedWord(word)
+                                    viewModel.fetchWordDefinition(word)
+                                }
+                            )
                             mapSelectionMode -> BottomMapBar(selectedPlace = selectedPlace)
                             showBottomPanel -> BottomMainRead(
                                 navController = navController,
@@ -271,12 +370,44 @@ fun ReaderScreen(
                                             false
                                         }
                                     }
+
                                     else -> false
                                 }
                             }
                     )
+
+                    if (isSearching) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Black.copy(alpha = 0.5f))
+                                .clickable(enabled = false) { },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                CircularProgressIndicator(color = White)
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Text(
+                                    text = "Поиск мест в главе...",
+                                    color = White,
+                                    fontSize = 16.sp
+                                )
+                            }
+                        }
+                    }
+                    searchMessage?.let { message ->
+                        LaunchedEffect(message) {
+                            delay(4000)
+                            viewModel.showSearchMessage("")
+                        }
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
     }
 }
+

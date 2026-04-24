@@ -30,7 +30,8 @@ object ReadiumHelper {
         val url = file.toUrl()
         val asset = assetRetriever.retrieve(url).getOrElse { throw ErrorException(it) }
 
-        val publicationParser = DefaultPublicationParser(context, httpClient, assetRetriever, null)
+        val publicationParser = DefaultPublicationParser(context, httpClient,
+            assetRetriever, null)
         val publicationOpener = PublicationOpener(publicationParser, emptyList())
         return publicationOpener.open(asset, allowUserInteraction = true)
             .getOrElse { throw ErrorException(it) }
@@ -45,7 +46,8 @@ object ReadiumHelper {
             val bytesResult = resource?.read()
             bytesResult?.let {
                 if (it.isSuccess) {
-                    BitmapFactory.decodeByteArray(bytesResult.getOrNull(), 0, bytesResult.getOrNull()?.size ?: 0)
+                    BitmapFactory.decodeByteArray(bytesResult.getOrNull(), 0,
+                        bytesResult.getOrNull()?.size ?: 0)
                 } else {
                     null
                 }
